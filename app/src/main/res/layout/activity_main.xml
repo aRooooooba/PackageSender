@@ -24,7 +24,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginRight="8dp"
+            app:borderWidth="0dp"
+            app:backgroundTint="#FF4011"
+            app:rippleColor="#33728dff"
+            app:elevation="8dp"
+            app:pressedTranslationZ="16dp"/>
 
 
 </android.support.constraint.ConstraintLayout>
