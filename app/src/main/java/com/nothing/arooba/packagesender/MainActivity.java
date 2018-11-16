@@ -9,6 +9,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
     private FloatingActionButton newScriptBtn;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

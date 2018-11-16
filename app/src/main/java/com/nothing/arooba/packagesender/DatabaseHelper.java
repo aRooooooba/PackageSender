@@ -3,9 +3,12 @@ package com.nothing.arooba.packagesender;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static final String TAG = "DatabaseHelper";
 
     // 创建Script表
     private static final String CREATE_SCRIPT = "create table Script\n" +
@@ -43,7 +46,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_SCRIPT);
-        db.execSQL(CREATE_SCRIPT);
+        Log.d(TAG, "Script table created.");
+        db.execSQL(CREATE_PACKAGE);
+        Log.d(TAG, "Package table created.");
         Toast.makeText(mContext, "初始化成功", Toast.LENGTH_SHORT).show();
     }
 
