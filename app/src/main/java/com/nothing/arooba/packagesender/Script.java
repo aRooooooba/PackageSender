@@ -8,6 +8,8 @@ public class Script {
 
     private static final String TAG = "Script";
 
+    // 序号
+    private int no;
     // 脚本名
     private String name;
     // 网包集合
@@ -17,11 +19,16 @@ public class Script {
     // 使用次数
     private int executeNum;
 
-    public Script(String name, ArrayList<Package> pckSet, String remark, int executeNum) {
+    public Script(int no, String name, ArrayList<Package> pckSet, String remark, int executeNum) {
+        this.no = no;
         this.name = name;
         this.pckSet = pckSet;
         this.remark = remark;
         this.executeNum = executeNum;
+    }
+
+    public int getNo() {
+        return no;
     }
 
     public String getName() {
@@ -38,6 +45,10 @@ public class Script {
 
     public int getExecuteNum() {
         return executeNum;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
     }
 
     public void setName(String name) {
