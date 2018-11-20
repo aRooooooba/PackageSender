@@ -1,6 +1,7 @@
 package com.nothing.arooba.packagesender;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,17 +9,19 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ScriptAdapter extends ArrayAdapter<Script> {
 
     private int resourceId;
 
-    public ScriptAdapter(Context context, int textViewResourceId, ArrayList<Script> objects) {
+    public ScriptAdapter(Context context, int textViewResourceId, List<Script> objects) {
         super(context, textViewResourceId, objects);
         resourceId = textViewResourceId;
     }
 
     @Override
+    @NonNull
     public View getView(int position, View convertView, ViewGroup parent) {
         Script script = getItem(position);
         View view;
@@ -34,6 +37,8 @@ public class ScriptAdapter extends ArrayAdapter<Script> {
         noText.setText(script.getNo());
         scriptNameText.setText(script.getName());
         scriptRemarkText.setText(script.getRemark());
-        executeNumberText.setText(script.getExecuteNum());
+        String tmp = "已经用了 ".concat(script.getExecuteNum()).concat(" 次");
+        executeNumberText.setText(tmp);
+        return view;
     }
 }

@@ -27,8 +27,8 @@ public class Script {
         this.executeNum = executeNum;
     }
 
-    public int getNo() {
-        return no;
+    public String getNo() {
+        return String.valueOf(no);
     }
 
     public String getName() {
@@ -43,8 +43,8 @@ public class Script {
         return remark;
     }
 
-    public int getExecuteNum() {
-        return executeNum;
+    public String getExecuteNum() {
+        return String.valueOf(executeNum);
     }
 
     public void setNo(int no) {

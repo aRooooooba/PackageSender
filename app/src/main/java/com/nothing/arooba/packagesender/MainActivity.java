@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
         // newScriptBtn = (FloatingActionButton) findViewById(R.id.newScriptButton);
 
-        newScriptBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        newScriptBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
     }
 
     private void initData() {
@@ -51,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
                 String name = cursor.getString(cursor.getColumnIndex("name"));
                 String remark = cursor.getString(cursor.getColumnIndex("remark"));
                 int executeNum = cursor.getInt(cursor.getColumnIndex("executeNum"));
+                ArrayList<Package> packageSet = new ArrayList<>();
                 cursor.close();
-                cursor = db.query("Package", null, "scriptID", new String[]{String.valueOf(i)}, null, null, "packageID");
+                cursor = db.query("Package", null, "scriptID=?", new String[]{String.valueOf(i)}, null, null, "packageID");
                 if (cursor.moveToFirst()) {
-                    ArrayList<Package> packageSet = new ArrayList<>();
                     do {
                         // 遍历Package
                         String url = cursor.getString(cursor.getColumnIndex("url"));
@@ -65,15 +65,17 @@ public class MainActivity extends AppCompatActivity {
                         cursor.close();
                         packageSet.add(new Package(url, type, params, headers, body));
                     } while (cursor.moveToNext());
-                    scriptSet.add(new Script(scriptID, name, packageSet, remark, executeNum));
                 } else {
                     Log.e(TAG, "第" + String.valueOf(scriptID) + "个脚本没有请求！");
-                    break;
                 }
+                scriptSet.add(new Script(scriptID, name, packageSet, remark, executeNum));
             } else {
-                Log.d(TAG, "有" + String.valueOf(i) + "个脚本");
+                Log.d(TAG, "有" + String.valueOf(i-1) + "个脚本");
                 break;
             }
+        }
+        for (Script script : scriptSet) {
+            Log.d(TAG, script.getName());
         }
     }
 }
