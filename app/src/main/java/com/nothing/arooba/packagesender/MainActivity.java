@@ -1,5 +1,7 @@
 package com.nothing.arooba.packagesender;
 
+import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -14,7 +17,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
-    private FloatingActionButton newScriptBtn;
+    private FloatingActionButton newScriptFAB;
+    private ListView scriptList;
     private static final String TAG = "MainActivity";
     private ArrayList<Script> scriptSet = new ArrayList<>();
 
@@ -23,25 +27,58 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView scriptList = (ListView) findViewById(R.id.scriptList);
+        scriptList = findViewById(R.id.scriptList);
 
         dbHelper = new DatabaseHelper(this, 1);
         dbHelper.getWritableDatabase();
+        refreshLayout();
+
+        scriptList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                return false;
+            }
+        });
+
+        newScriptFAB = findViewById(R.id.newScriptFAB);
+
+        newScriptFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, NewScriptActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    String scriptName = data.getStringExtra("scriptName");
+                    String scriptRemark = data.getStringExtra("scriptRemark");
+                    Log.d(TAG, "scriptName: " + scriptName);
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+                    ContentValues values = new ContentValues();
+                    // 组装数据
+                    values.put("scriptID", scriptSet.size() + 1);
+                    values.put("name", scriptName);
+                    values.put("remark", scriptRemark);
+                    db.insert("Script", null, values);
+                    refreshLayout();
+                }
+        }
+    }
+
+    private void refreshLayout() {
         initData();
         ScriptAdapter scriptAdapter = new ScriptAdapter(MainActivity.this, R.layout.script_item, scriptSet);
         scriptList.setAdapter(scriptAdapter);
-
-        // newScriptBtn = (FloatingActionButton) findViewById(R.id.newScriptButton);
-
-//        newScriptBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
     }
 
     private void initData() {
+        scriptSet.clear();  // remove all elements
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         for (int i = 1;;i++) {
             // 查询
@@ -66,11 +103,11 @@ public class MainActivity extends AppCompatActivity {
                         packageSet.add(new Package(url, type, params, headers, body));
                     } while (cursor.moveToNext());
                 } else {
-                    Log.e(TAG, "第" + String.valueOf(scriptID) + "个脚本没有请求！");
+                    Log.e(TAG, "第" + scriptID + "个脚本没有请求！");
                 }
                 scriptSet.add(new Script(scriptID, name, packageSet, remark, executeNum));
             } else {
-                Log.d(TAG, "有" + String.valueOf(i-1) + "个脚本");
+                Log.d(TAG, "有" + (i-1) + "个脚本");
                 break;
             }
         }

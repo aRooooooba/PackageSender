@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PackageSender</string>
+    <string name="new_script_label">add a script</string>
+    <string name="script_name_hint">The name of the script</string>
+    <string name="script_remark_hint">The remark of the script</string>
+    <string name="save_btn_text">SAVE</string>
 </resources>
