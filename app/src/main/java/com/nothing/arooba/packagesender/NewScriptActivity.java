@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class NewScriptActivity extends Activity {
     private static final String TAG = "NewScriptActivity";
 
@@ -22,6 +24,7 @@ public class NewScriptActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_script);
+        final Data data = (Data) getApplication();
 
         scriptNameText = findViewById(R.id.scriptNameText);
         scriptRemarkText = findViewById(R.id.scriptRemarkText);
@@ -45,10 +48,8 @@ public class NewScriptActivity extends Activity {
                     builder.show();
                 }
                 String scriptRemark = scriptRemarkText.getText().toString();
-                Intent intent = new Intent();
-                intent.putExtra("scriptName", scriptName);
-                intent.putExtra("scriptRemark", scriptRemark);
-                setResult(RESULT_OK, intent);
+                Script script = new Script(scriptName, new ArrayList<Package>(), scriptRemark, 0);
+                data.addScript(script);
                 Toast.makeText(NewScriptActivity.this, scriptName + " 创建成功！", Toast.LENGTH_SHORT).show();
                 finish();
             }

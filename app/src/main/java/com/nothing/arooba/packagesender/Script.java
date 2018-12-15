@@ -8,35 +8,28 @@ public class Script {
 
     private static final String TAG = "Script";
 
-    // 序号
-    private int no;
     // 脚本名
     private String name;
     // 网包集合
-    private ArrayList<Package> pckSet;
+    private ArrayList<Package> packageSet;
     // 备注
     private String remark;
     // 使用次数
     private int executeNum;
 
-    public Script(int no, String name, ArrayList<Package> pckSet, String remark, int executeNum) {
-        this.no = no;
+    public Script(String name, ArrayList<Package> packageSet, String remark, int executeNum) {
         this.name = name;
-        this.pckSet = pckSet;
+        this.packageSet = packageSet;
         this.remark = remark;
         this.executeNum = executeNum;
-    }
-
-    public String getNo() {
-        return String.valueOf(no);
     }
 
     public String getName() {
         return name;
     }
 
-    public ArrayList<Package> getPckSet() {
-        return pckSet;
+    public ArrayList<Package> getPackageSet() {
+        return packageSet;
     }
 
     public String getRemark() {
@@ -45,10 +38,6 @@ public class Script {
 
     public String getExecuteNum() {
         return String.valueOf(executeNum);
-    }
-
-    public void setNo(int no) {
-        this.no = no;
     }
 
     public void setName(String name) {
@@ -60,7 +49,7 @@ public class Script {
     }
 
     public boolean executeScript() {
-        for (Package pck : pckSet) {
+        for (Package pck : packageSet) {
             if (!pck.sendPackage()) {
                 return false;
             }
