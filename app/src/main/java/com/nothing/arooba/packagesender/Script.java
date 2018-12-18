@@ -3,6 +3,7 @@ package com.nothing.arooba.packagesender;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Script {
 
@@ -57,5 +58,22 @@ public class Script {
         }
         executeNum++;
         return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Script) {
+            Script other = (Script) obj;
+            return name.equals(other.name) && remark.equals(other.remark);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, remark);
     }
 }

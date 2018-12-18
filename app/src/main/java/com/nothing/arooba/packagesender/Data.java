@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Data extends Application {
     private static final String TAG = "Data";
@@ -17,16 +18,34 @@ public class Data extends Application {
         return scriptSet;
     }
 
-    public void addScript(Script script) {
+    public int getSize() {
+        return scriptSet.size();
+    }
+
+    public void addScript(int index, Script script) {
         DatabaseHelper dbHelper = new DatabaseHelper(this, 1);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if (index != getSize()) {
+            // 需要有插入操作
+            String sql = String.format(Locale.getDefault(),
+                    "update Script set scriptID = scriptID + %d where scriptID >= %d", getSize(), index);
+            Log.v(TAG, "sql: " + sql);
+            db.execSQL(sql);
+            sql = String.format(Locale.getDefault(),
+                    "update Script set scriptID = scriptID - %d where scriptID > %d", getSize()-1, index);
+            Log.v(TAG, "sql: " + sql);
+            db.execSQL(sql);
+        }
         ContentValues values = new ContentValues();
-        values.put("scriptID", scriptSet.size());
+        values.put("scriptID", index);
         values.put("name", script.getName());
         values.put("remark", script.getRemark());
         db.insert("Script", null, values);  // save the data
-        Log.d(TAG, "insert succeeded, id: " + scriptSet.size() + ", name: " + script.getName());
-        scriptSet.add(script);
+        for (Package pck : script.getPackageSet()) {
+            addPackage(index, pck, -1);
+        }
+        Log.d(TAG, "insert succeeded, id: " + getSize() + ", name: " + script.getName());
+        scriptSet.add(index, script);
     }
 
     public void addPackage(int scriptIndex, Package pck, int packageIndex) {
@@ -35,13 +54,19 @@ public class Data extends Application {
         DatabaseHelper dbHelper = new DatabaseHelper(this, 1);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Script script = scriptSet.get(scriptIndex);
-        if (packageIndex == -1) {
-            script.getPackageSet().add(pck);
+        if (packageIndex == script.getPackageSet().size()) {
             packageIndex = script.getPackageSet().size();
         } else {
-            script.getPackageSet().add(packageIndex, pck);
-            String sql = "update Package set packageID = packageID + 1 where packageID >= " + packageIndex;
-            Log.d(TAG, "sql: " + sql);
+            // 插入
+            String sql = String.format(Locale.getDefault(),
+                    "update Package set packageID = packageID + %d where scriptID = %d and packageID >= %d",
+                    script.getPackageSet().size(), scriptIndex, packageIndex);
+            Log.v(TAG, "sql: " + sql);
+            db.execSQL(sql);
+            sql = String.format(Locale.getDefault(),
+                    "update Package set packageID = packageID - %d where scriptID = %d and packageID > %d",
+                    script.getPackageSet().size()-1, scriptIndex, packageIndex);
+            Log.v(TAG, "sql: " + sql);
             db.execSQL(sql);
         }
         ContentValues values = new ContentValues();
@@ -53,12 +78,34 @@ public class Data extends Application {
         values.put("headers", pck.getHeaders());
         values.put("body", pck.getBody());
         db.insert("Package", null, values);
+        script.getPackageSet().add(packageIndex, pck);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         loadData();
+    }
+
+    public void deleteScript(int index) {
+        DatabaseHelper dbHelper = new DatabaseHelper(this, 1);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("Package", "scriptID=?", new String[] {String.valueOf(index)});
+        db.delete("Script", "scriptID=?", new String[] {String.valueOf(index)});
+        if (index != getSize()) {
+            String sql = "update Package set scriptID = scriptID - 1 where scriptID > " + index;
+            Log.v(TAG, "sql: " + sql);
+            db.execSQL(sql);
+            sql = "update Script set scriptID = scriptID - 1 where scriptID > " + index;
+            Log.v(TAG, "sql: " + sql);
+            db.execSQL(sql);
+        }
+        scriptSet.remove(index);
+    }
+
+    public void updateScript(int oldIndex, int newIndex, Script script) {
+        deleteScript(oldIndex);
+        addScript(newIndex, script);
     }
 
     private void loadData() {
@@ -74,7 +121,7 @@ public class Data extends Application {
                 int executeNum = cursor.getInt(cursor.getColumnIndex("executeNum"));
                 ArrayList<Package> packageSet = new ArrayList<>();
                 cursor.close();
-                cursor = db.query("Package", null, "scriptID=?", new String[]{String.valueOf(i)}, null, null, "packageID");
+                cursor = db.query("Package", null, "scriptID=?", new String[] {String.valueOf(i)}, null, null, "packageID");
                 if (cursor.moveToFirst()) {
                     do {
                         // 遍历Package

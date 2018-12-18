@@ -23,9 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // 创建Package表
     private static final String CREATE_PACKAGE = "create table Package\n" +
             "(\n" +
-            "  scriptID  integer not null\n" +
-            "    constraint Package_Script_scriptID_fk\n" +
-            "    references Script,\n" +
+            "  scriptID  integer not null,\n" +
             "  packageID integer not null,\n" +
             "  url       text    not null,\n" +
             "  type      text    not null,\n" +

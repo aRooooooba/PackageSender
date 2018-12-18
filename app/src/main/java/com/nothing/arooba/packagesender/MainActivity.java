@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshLayout() {
-        Data data = (Data) getApplication();
+        final Data data = (Data) getApplication();
 
         ListView scriptList = findViewById(R.id.scriptList);
         ArrayList<Script> scriptSet = data.getScriptSet();
@@ -63,6 +64,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "index: " + position);
                 startActivityForResult(intent, 1);
                 return true;
+            }
+        });
+        scriptList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (data.getScriptSet().get(position).executeScript()) {
+                    Toast.makeText(MainActivity.this, "执行成功！", Toast.LENGTH_SHORT).show();
+                    refreshLayout();
+                } else {
+                    Toast.makeText(MainActivity.this, "发生错误，请检查网络！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

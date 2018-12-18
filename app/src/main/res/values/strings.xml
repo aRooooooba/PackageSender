@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">PackageSender</string>
     <string name="new_script_label">add a script</string>
+    <string name="script_no_hint">The No. of the script(optional)</string>
     <string name="script_name_hint">The name of the script</string>
-    <string name="script_remark_hint">The remark of the script</string>
+    <string name="script_remark_hint">The remark of the script(optional)</string>
     <string name="save_btn_text">保存</string>
     <string name="package_list_title_edit_btn_text">编辑</string>
     <string name="package_list_title_delete_btn_text">删除</string>
-    <string name="package_type_description">用于显示请求类型（POST/GET）</string>
 </resources>

@@ -5,6 +5,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
+import java.util.Objects;
+
 public class Package {
 
     // 目标网站
@@ -107,5 +109,23 @@ public class Package {
         if (pck.sendPackage()) {
             System.out.println("成功");
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Package) {
+            Package other = (Package) obj;
+            return url.equals(other.url) && type.equals(other.type) && params.equals(other.params)
+                    && headers.equals(other.headers) && body.equals(other.body);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(url, type, params, headers, body);
     }
 }
