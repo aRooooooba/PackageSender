@@ -33,7 +33,7 @@
             android:id="@+id/deleteBtn"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@drawable/delete_bg"
+            android:background="#f00"
             android:text="@string/package_list_title_delete_btn_text"
             android:textColor="#fff"
     />

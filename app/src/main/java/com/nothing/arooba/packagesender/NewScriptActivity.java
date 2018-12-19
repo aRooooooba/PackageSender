@@ -41,10 +41,10 @@ public class NewScriptActivity extends Activity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int scriptNo = data.getSize();
+                int scriptNo = data.getScriptSetSize();
                 if (!scriptNoText.getText().toString().isEmpty()) {
                     scriptNo = Integer.parseInt(scriptNoText.getText().toString());
-                    if (scriptNo <= 0 || scriptNo > data.getSize()+1) {
+                    if (scriptNo <= 0 || scriptNo > data.getScriptSetSize() + 1) {
                         showAlert(WRONG_NO);
                         return;
                     }
@@ -60,14 +60,14 @@ public class NewScriptActivity extends Activity {
                 String scriptRemark = scriptRemarkText.getText().toString();
                 Script script1 = new Script(scriptName, new ArrayList<Package>(), scriptRemark, 0);
                 if (index != -1) {  // 更新一条已有的信息
-                    if (scriptNo == data.getSize()) {
+                    if (scriptNo == data.getScriptSetSize()) {
                         scriptNo--;
                     }
                     Intent intent = new Intent();
                     intent.putExtra("index_return", scriptNo);
                     setResult(RESULT_OK, intent);
                     Script script2 = data.getScriptSet().get(index);
-                    if (scriptNo == index && script2.equals(script1)) {
+                    if (scriptNo == index && script1.equals(script2)) {
                         Log.d(TAG, "没有修改，直接退出。");
                     } else {
                         data.updateScript(index, scriptNo, script1);
@@ -90,13 +90,7 @@ public class NewScriptActivity extends Activity {
         } else if (flag == WRONG_NO) {
             builder.setMessage("请输入合法的序号！\n不输入默认为追加！");
         }
-        builder.setCancelable(false);
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton("确认", null);
         builder.show();
     }
 }

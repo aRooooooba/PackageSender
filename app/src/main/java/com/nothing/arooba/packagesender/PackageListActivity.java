@@ -3,14 +3,13 @@ package com.nothing.arooba.packagesender;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.util.ArrayList;
 
@@ -29,8 +28,7 @@ public class PackageListActivity extends AppCompatActivity {
             actionBar.hide();
         }
 
-        Intent intent1 = getIntent();
-        index = intent1.getIntExtra("index", -1);
+        index = getIntent().getIntExtra("index", -1);
         Log.d(TAG, "index: " + index);
         refreshLayout();
 
@@ -38,9 +36,9 @@ public class PackageListActivity extends AppCompatActivity {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(PackageListActivity.this, NewScriptActivity.class);
-                intent2.putExtra("index", index);
-                startActivityForResult(intent2, 1);
+                Intent intent = new Intent(PackageListActivity.this, NewScriptActivity.class);
+                intent.putExtra("index", index);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -56,12 +54,22 @@ public class PackageListActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Data data = (Data) getApplication();
                         data.deleteScript(index);
-                        Log.d(TAG, index + "删除成功");
+                        Toast.makeText(PackageListActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
                 builder.setNegativeButton("取消", null);
                 builder.show();
+            }
+        });
+
+        FloatingActionButton newPackageFAB = findViewById(R.id.newPackageFAB);
+        newPackageFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PackageListActivity.this, NewPackageActivity.class);
+                intent.putExtra("scriptIndex", index);
+                startActivity(intent);
             }
         });
     }
@@ -77,7 +85,6 @@ public class PackageListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "resume");
         refreshLayout();
     }
 
@@ -93,5 +100,15 @@ public class PackageListActivity extends AppCompatActivity {
          PackageAdapter packageAdapter = new PackageAdapter(PackageListActivity.this,
                  R.layout.package_item, script.getPackageSet());
          packageList.setAdapter(packageAdapter);
+         packageList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+             @Override
+             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                 Intent intent = new Intent(PackageListActivity.this, NewPackageActivity.class);
+                 intent.putExtra("scriptIndex", index);
+                 intent.putExtra("packageIndex", position);
+                 startActivity(intent);
+                 return true;
+             }
+         });
      }
 }

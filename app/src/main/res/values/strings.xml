@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">PackageSender</string>
-    <string name="new_script_label">add a script</string>
-    <string name="script_no_hint">The No. of the script(optional)</string>
-    <string name="script_name_hint">The name of the script</string>
-    <string name="script_remark_hint">The remark of the script(optional)</string>
+    <string name="no_hint">序号（可选）</string>
+    <string name="name_hint">名称</string>
+    <string name="remark_hint">备注（可选）</string>
+    <string name="url_hint">目标网址</string>
+    <string name="type_hint">请求类型</string>
+    <string name="params_hint">参数（可选）</string>
+    <string name="headers_hint">请求头（可选）</string>
+    <string name="body_hint">请求体（可选）</string>
     <string name="save_btn_text">保存</string>
+    <string name="delete_btn_text">删除</string>
     <string name="package_list_title_edit_btn_text">编辑</string>
     <string name="package_list_title_delete_btn_text">删除</string>
 </resources>

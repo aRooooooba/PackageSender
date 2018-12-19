@@ -37,13 +37,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 1:
-        }
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         refreshLayout();
@@ -62,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, PackageListActivity.class);
                 intent.putExtra("index", position);
                 Log.d(TAG, "index: " + position);
-                startActivityForResult(intent, 1);
+                startActivity(intent);
                 return true;
             }
         });

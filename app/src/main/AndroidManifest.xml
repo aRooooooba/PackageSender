@@ -3,27 +3,26 @@
           package="com.nothing.arooba.packagesender">
 
     <application
+            android:name=".Data"
             android:allowBackup="true"
             android:icon="@mipmap/logo"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/logo"
             android:supportsRtl="true"
-            android:name=".Data"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".MainActivity"
-                android:label="@string/app_name">
+                android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name=".NewScriptActivity"
-                android:label="@string/new_script_label">
+        <activity android:name=".NewScriptActivity">
         </activity>
         <activity android:name=".PackageListActivity">
+        </activity>
+        <activity android:name=".NewPackageActivity">
         </activity>
     </application>
 
