@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PackageSender</string>
+    <string name="app_name">迅速</string>
     <string name="no_hint">序号（可选）</string>
     <string name="name_hint">名称</string>
     <string name="remark_hint">备注（可选）</string>

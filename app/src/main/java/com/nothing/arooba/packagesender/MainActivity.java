@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -44,9 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshLayout() {
         final Data data = (Data) getApplication();
-
         ListView scriptList = findViewById(R.id.scriptList);
-        ArrayList<Script> scriptSet = data.getScriptSet();
+        final ArrayList<Script> scriptSet = data.getScriptSet();
         ScriptAdapter scriptAdapter = new ScriptAdapter(MainActivity.this, R.layout.script_item, scriptSet);
         scriptList.setAdapter(scriptAdapter);
         scriptList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -61,12 +61,24 @@ public class MainActivity extends AppCompatActivity {
         });
         scriptList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (data.getScriptSet().get(position).executeScript()) {
-                    Toast.makeText(MainActivity.this, "执行成功！", Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Looper.prepare();
+                        if (scriptSet.get(position).executeScript()) {
+                            Toast.makeText(MainActivity.this, "执行成功！", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "发生错误，请检查网络！", Toast.LENGTH_SHORT).show();
+                        }
+                        Looper.loop();
+                    }
+                }).start();
+                try {
+                    Thread.sleep(500);
                     refreshLayout();
-                } else {
-                    Toast.makeText(MainActivity.this, "发生错误，请检查网络！", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

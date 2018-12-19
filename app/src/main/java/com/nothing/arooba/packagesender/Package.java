@@ -1,5 +1,6 @@
 package com.nothing.arooba.packagesender;
 
+import android.util.Log;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -8,6 +9,7 @@ import okhttp3.RequestBody;
 import java.util.Objects;
 
 public class Package {
+    private static final String TAG = "Package";
 
     // 目标网站
     private String url;
@@ -83,17 +85,20 @@ public class Package {
             OkHttpClient client = new OkHttpClient();
             Request.Builder requestBuilder = new Request.Builder().url(getWholeUrl());
             if (!headers.isEmpty()) {
+                Log.d(TAG, "headers: " + headers);
                 for (String pair : headers.split("&")) {
                     requestBuilder = requestBuilder.addHeader(pair.split("=")[0], pair.split("=")[1]);
                 }
             }
             if (type.equals("POST") && !body.isEmpty()) {
+                Log.d(TAG, "body: " + body);
                 FormBody.Builder formBodyBuilder = new FormBody.Builder();
                 for (String pair : body.split("&")) {
                     formBodyBuilder = formBodyBuilder.add(pair.split("=")[0], pair.split("=")[1]);
                 }
                 requestBuilder = requestBuilder.post(formBodyBuilder.build());
             }
+            Log.v(TAG, "ready");
             client.newCall(requestBuilder.build()).execute();
             return true;
         } catch (Exception e) {
