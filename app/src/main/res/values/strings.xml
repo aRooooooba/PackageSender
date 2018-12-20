@@ -12,4 +12,8 @@
     <string name="delete_btn_text">删除</string>
     <string name="package_list_title_edit_btn_text">编辑</string>
     <string name="package_list_title_delete_btn_text">删除</string>
+    <string-array name="request_type">
+        <item>GET</item>
+        <item>POST</item>
+    </string-array>
 </resources>

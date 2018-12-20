@@ -7,15 +7,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 
 public class NewPackageActivity extends AppCompatActivity {
     private static final String TAG = "NewPackageActivity";
     private final int WRONG_NO = 1;
     private final int WRONG_URL = 2;
-    private final int WRONG_TYPE = 3;
+
+    private final int TYPE_GET = 0;
+    private final int TYPE_POST = 1;
+
+    private String spinSelection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,8 @@ public class NewPackageActivity extends AppCompatActivity {
         final Data data = (Data) getApplication();
         final EditText packageNoText = findViewById(R.id.packageNoText);
         final EditText urlText = findViewById(R.id.urlText);
-        final EditText typeText = findViewById(R.id.typeText);
+        final Spinner typeSpin = findViewById(R.id.typeSpin);
+        typeSpin.setSelection(TYPE_GET, true);
         final EditText paramsText = findViewById(R.id.paramsText);
         final EditText headersText = findViewById(R.id.headersText);
         final EditText bodyText = findViewById(R.id.bodyText);
@@ -37,7 +40,11 @@ public class NewPackageActivity extends AppCompatActivity {
             Package pck = data.getPackageSet(scriptIndex).get(packageIndex);
             packageNoText.setText(String.valueOf(packageIndex + 1));
             urlText.setText(pck.getUrl());
-            typeText.setText(pck.getType());
+            if (pck.getType().equals("GET")) {
+                typeSpin.setSelection(TYPE_GET, true);
+            } else if (pck.getType().equals("POST")) {
+                typeSpin.setSelection(TYPE_POST, true);
+            }
             paramsText.setText(pck.getParams());
             headersText.setText(pck.getHeaders());
             bodyText.setText(pck.getBody());
@@ -63,6 +70,22 @@ public class NewPackageActivity extends AppCompatActivity {
             });
         }
 
+        typeSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == TYPE_GET) {
+                    spinSelection = "GET";
+                } else if (position == TYPE_POST) {
+                    spinSelection = "POST";
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         Button saveBtn = findViewById(R.id.saveBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,15 +105,10 @@ public class NewPackageActivity extends AppCompatActivity {
                     showAlert(WRONG_URL);
                     return;
                 }
-                String type = typeText.getText().toString();
-                if (type.isEmpty()) {
-                    showAlert(WRONG_TYPE);
-                    return;
-                }
                 String params = paramsText.getText().toString();
                 String headers = headersText.getText().toString();
                 String body = bodyText.getText().toString();
-                Package pck1 = new Package(url, type, params, headers, body);
+                Package pck1 = new Package(url, spinSelection, params, headers, body);
                 if (packageIndex != -1) {
                     if (packageNo == data.getPackageSetSize(scriptIndex)) {
                         packageNo--;
@@ -118,8 +136,6 @@ public class NewPackageActivity extends AppCompatActivity {
             builder.setMessage("请输入合法的序号！\n不输入默认为追加！");
         } else if (flag == WRONG_URL) {
             builder.setMessage("请输入目标网址！");
-        } else if (flag == WRONG_TYPE) {
-            builder.setMessage("请输入请求类型！");
         }
         builder.setPositiveButton("确认", null);
         builder.show();

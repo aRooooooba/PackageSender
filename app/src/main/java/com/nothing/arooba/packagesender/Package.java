@@ -24,7 +24,7 @@ public class Package {
 
     public Package(String url, String type, String params, String headers, String body) {
         this.url = url;
-        this.type = type.toUpperCase();
+        this.type = type;
         this.params = params;
         this.headers = headers;
         this.body = body;
