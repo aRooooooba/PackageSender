@@ -135,6 +135,16 @@ public class Data extends Application {
         addPackage(scriptIndex, newPackageIndex, pck);
     }
 
+    public void refreshExecuteTime(int index) {
+        DatabaseHelper dbHelper = new DatabaseHelper(this, 1);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql = String.format(Locale.getDefault(),
+                "update Script set executeNum = %d where scriptID = %d", scriptSet.get(index).getExecuteNum(), index);
+        Log.v(TAG, "sql: " + sql);
+        db.execSQL(sql);
+        db.close();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

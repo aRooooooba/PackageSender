@@ -36,7 +36,7 @@ public class ScriptAdapter extends ArrayAdapter<Script> {
         noText.setText(String.valueOf(position + 1));
         scriptNameText.setText(script.getName());
         scriptRemarkText.setText(script.getRemark());
-        String tmp = "已经用了 ".concat(script.getExecuteNum()).concat(" 次");
+        String tmp = "已经用了 " + script.getExecuteNum() + " 次";
         executeNumberText.setText(tmp);
         return view;
     }

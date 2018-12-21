@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,17 +16,35 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    private static final int SEND_SUCCEEDED = 1;
+    private static final int SEND_FAILED = 2;
+    private Handler handler = new Handler() {
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case SEND_SUCCEEDED:
+                    Toast.makeText(MainActivity.this, "执行成功！", Toast.LENGTH_SHORT).show();
+                    refreshLayout();
+                    break;
+                case SEND_FAILED:
+                    Toast.makeText(MainActivity.this, "发生错误，请检查网络！", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         refreshLayout();
 
         FloatingActionButton newScriptFAB = findViewById(R.id.newScriptFAB);
@@ -65,21 +85,16 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Looper.prepare();
+                        Message message = new Message();
                         if (scriptSet.get(position).executeScript()) {
-                            Toast.makeText(MainActivity.this, "执行成功！", Toast.LENGTH_SHORT).show();
+                            data.refreshExecuteTime(position);
+                            message.what = SEND_SUCCEEDED;
                         } else {
-                            Toast.makeText(MainActivity.this, "发生错误，请检查网络！", Toast.LENGTH_SHORT).show();
+                            message.what = SEND_FAILED;
                         }
-                        Looper.loop();
+                        handler.sendMessage(message);
                     }
                 }).start();
-                try {
-                    Thread.sleep(500);
-                    refreshLayout();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         });
     }

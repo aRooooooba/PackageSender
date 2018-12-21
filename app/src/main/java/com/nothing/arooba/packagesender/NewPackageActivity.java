@@ -17,7 +17,7 @@ public class NewPackageActivity extends AppCompatActivity {
     private final int TYPE_GET = 0;
     private final int TYPE_POST = 1;
 
-    private String spinSelection;
+    private String spinSelection = "GET";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +40,10 @@ public class NewPackageActivity extends AppCompatActivity {
             Package pck = data.getPackageSet(scriptIndex).get(packageIndex);
             packageNoText.setText(String.valueOf(packageIndex + 1));
             urlText.setText(pck.getUrl());
-            if (pck.getType().equals("GET")) {
+            spinSelection = pck.getType();
+            if (spinSelection.equals("GET")) {
                 typeSpin.setSelection(TYPE_GET, true);
-            } else if (pck.getType().equals("POST")) {
+            } else if (spinSelection.equals("POST")) {
                 typeSpin.setSelection(TYPE_POST, true);
             }
             paramsText.setText(pck.getParams());

@@ -37,8 +37,8 @@ public class Script {
         return remark;
     }
 
-    public String getExecuteNum() {
-        return String.valueOf(executeNum);
+    public int getExecuteNum() {
+        return executeNum;
     }
 
     public void setName(String name) {
