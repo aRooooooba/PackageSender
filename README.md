@@ -36,3 +36,5 @@ Android, send my own packages
 全部保存以后，回到主界面，点击刚才设置的这个脚本即可执行。
 
 如有任何问题或建议欢迎联系lxjarooba@foxmail.com
+
+enjoy it!
