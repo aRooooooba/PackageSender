@@ -1,11 +1,7 @@
 package com.nothing.arooba.packagesender;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import java.lang.ref.WeakReference;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MobileAds.initialize(this, "ca-app-pub-2710237255954645~3915916280");
+
         refreshLayout();
 
         FloatingActionButton newScriptFAB = findViewById(R.id.newScriptFAB);
@@ -55,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        AdView adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     @Override

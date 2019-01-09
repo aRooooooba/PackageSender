@@ -12,6 +12,11 @@
     <string name="delete_btn_text">删除</string>
     <string name="package_list_title_edit_btn_text">编辑</string>
     <string name="package_list_title_delete_btn_text">删除</string>
+    <string name="main_activity_label">迅速：制作属于你的脚本</string>
+    <string name="main_activity_hint">点击发送，长按编辑</string>
+    <string name="new_package_label">请求详情</string>
+    <string name="new_script_label">脚本详情</string>
+    <string name="adUnitId">ca-app-pub-2710237255954645/1954121449</string>
     <string-array name="request_type">
         <item>GET</item>
         <item>POST</item>
